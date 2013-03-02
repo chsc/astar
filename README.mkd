@@ -1,0 +1,5 @@
+A* search algorithm
+===================
+
+Implementation of the A* search algorithm in Go.
+
