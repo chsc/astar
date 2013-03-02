@@ -53,7 +53,7 @@ type nodeElementHeap []*nodeElement
 
 type AStar struct {
 	costEstimateFunc HeuristicCostEstimateFunc
-	elmentPool       nodeElementPool
+	elementPool      nodeElementPool
 	openList         nodeElementHeap
 	closedList       map[Node]none
 	path             []Node
@@ -102,7 +102,7 @@ func (as *AStar) Path() []Node {
 }
 
 func (as *AStar) reset() {
-	as.elmentPool = as.elmentPool[:0]
+	as.elementPool = as.elementPool[:0]
 	as.openList = as.openList[:0]
 	as.closedList = make(map[Node]none)
 	as.path = as.path[:0]
@@ -113,7 +113,7 @@ func (as *AStar) Find(start, goal Node) bool {
 	as.reset()
 	g := float32(0)
 	h := as.costEstimateFunc(start, goal)
-	heap.Push(&as.openList, as.elmentPool.NewElement(g+h, g, h, start, nil))
+	heap.Push(&as.openList, as.elementPool.NewElement(g+h, g, h, start, nil))
 	for len(as.openList) > 0 {
 		currentNodeElement := heap.Pop(&as.openList).(*nodeElement)
 		if currentNodeElement.Node == goal {
@@ -145,7 +145,7 @@ func (as *AStar) expandNode(currentNodeElement *nodeElement, goal Node) {
 			}
 		} else {
 			g, h := t, as.costEstimateFunc(successorNode, goal)
-			heap.Push(&as.openList, as.elmentPool.NewElement(g+h, g, h, successorNode, currentNodeElement))
+			heap.Push(&as.openList, as.elementPool.NewElement(g+h, g, h, successorNode, currentNodeElement))
 		}
 	}
 }
