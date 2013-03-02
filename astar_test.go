@@ -26,18 +26,18 @@
 package astar
 
 import (
-	"testing"
 	"math"
+	"testing"
 )
 
 var (
 	costs = []float32{1, 1.141, 1.0, 1.141, 1.0, 1.141, 1.0, 1.141}
-	dirx = []int{ 0,  1, 1, 1, 0, -1, -1, -1}
-	diry = []int{-1, -1, 0, 1, 1,  1,  0, -1}
+	dirx  = []int{0, 1, 1, 1, 0, -1, -1, -1}
+	diry  = []int{-1, -1, 0, 1, 1, 1, 0, -1}
 )
 
 type MNode struct {
-	m *Map
+	m    *Map
 	x, y int
 	cost float32
 }
@@ -99,10 +99,10 @@ type pos struct {
 
 type pathTest struct {
 	start, end pos
-	path []pos
+	path       []pos
 }
 
-var pathTests = []pathTest {
+var pathTests = []pathTest{
 	{pos{0, 0}, pos{0, 0}, []pos{{0, 0}}},
 	{pos{0, 0}, pos{1, 1}, []pos{{1, 1}, {0, 0}}},
 	{pos{1, 1}, pos{5, 1}, []pos{{5, 1}, {4, 1}, {3, 1}, {2, 1}, {1, 1}}},
@@ -110,7 +110,7 @@ var pathTests = []pathTest {
 
 func TestAStar(t *testing.T) {
 	as := New(Heuristic)
-	m  := NewMap(32, 32)
+	m := NewMap(32, 32)
 	for i, _ := range pathTests {
 		tst := &pathTests[i]
 		if !as.Find(m.Node(tst.start.x, tst.start.y), m.Node(tst.end.x, tst.end.y)) {

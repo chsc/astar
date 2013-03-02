@@ -46,7 +46,6 @@ type nodeElement struct {
 	H        float32
 	Node     Node
 	cameFrom *nodeElement
-	//Optimization: use Closed bool instead of an hash?
 }
 
 type nodeElementPool []nodeElement
@@ -96,6 +95,8 @@ func New(costEstimateFunc HeuristicCostEstimateFunc) *AStar {
 		make([]Node, 0, 128)}
 }
 
+// Returns the path including the start and the end node if Find() was true.
+// Note that the returned slice of path nodes may be invalidated after the next call to Find().
 func (as *AStar) Path() []Node {
 	return as.path
 }
@@ -107,6 +108,7 @@ func (as *AStar) reset() {
 	as.path = as.path[:0]
 }
 
+// Finds the shortest path between two nodes in a graph.
 func (as *AStar) Find(start, goal Node) bool {
 	as.reset()
 	g := float32(0)
@@ -129,7 +131,7 @@ func (as *AStar) expandNode(currentNodeElement *nodeElement, goal Node) {
 	for i := 0; i < numNeigbours; i++ {
 		successorNode := currentNodeElement.Node.Neighbour(i)
 		if _, ok := as.closedList[successorNode]; ok {
-			continue;
+			continue
 		}
 		t := currentNodeElement.G + currentNodeElement.Node.Cost(i)
 		if index, ok := as.inOpenList(successorNode); ok {
@@ -137,7 +139,7 @@ func (as *AStar) expandNode(currentNodeElement *nodeElement, goal Node) {
 			if t < g {
 				g, h := t, as.costEstimateFunc(successorNode, goal)
 				elem := heap.Remove(&as.openList, index).(*nodeElement)
-				elem.G, elem.H, elem.F = g, h, g + h
+				elem.G, elem.H, elem.F = g, h, g+h
 				elem.cameFrom = currentNodeElement
 				heap.Push(&as.openList, elem)
 			}
